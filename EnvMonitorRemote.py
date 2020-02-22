@@ -5,8 +5,10 @@ import adafruit_mcp9808
 import adafruit_veml7700
 import socket
 
-HOST = '127.0.0.1'
-PORT = 65432
+configFile = open('NetConfig.txt','r')
+settings = configFile.readlines()
+HOST = settings[0][:-1]
+PORT = int(settings[1])
 
 i2c_bus = busio.I2C(board.SCL, board.SDA)
 mcp9808 = adafruit_mcp9808.MCP9808(i2c_bus)
