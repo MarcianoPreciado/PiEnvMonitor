@@ -33,18 +33,21 @@ def getCommas(string):
 
 def parsePacket(data):
     msg = data.outb.decode()
-    print(msg)
-    inds = getCommas(msg)
-    timestamp = int(msg[1:inds[0]])
-    label     = msg[inds[0]+1:inds[1]]
-    tempC     = float(msg[inds[1]+1:inds[2]])
-    tempF     = float(msg[inds[2]+1:inds[3]])
-    ambient   = float(msg[inds[3]+1:inds[4]])
-    lux       = float(msg[inds[4]+1:])
-    
-    data = (tempC,tempF,ambient,lux)
-    logData(timestamp, label, data)
-
+    if len(msg) > 1:
+        inds = getCommas(msg)
+        timestamp = int(msg[1:inds[0]])
+        label     = msg[inds[0]+1:inds[1]]
+        tempC     = float(msg[inds[1]+1:inds[2]])
+        tempF     = float(msg[inds[2]+1:inds[3]])
+        ambient   = float(msg[inds[3]+1:inds[4]])
+        lux       = float(msg[inds[4]+1:])
+        
+        data = (tempC,tempF,ambient,lux)
+        logData(timestamp, label, data)
+        # TODO net log successful message
+    else:
+        print('blank message')
+        # TODO net log recieved invalid message
 def accept_wrapper(sock):
     conn, addr = sock.accept()
     # TODO log to master net log
