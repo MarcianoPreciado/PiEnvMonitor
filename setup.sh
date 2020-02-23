@@ -1,4 +1,4 @@
-#1/bin/bash
+#!/bin/bash
 
 pip3 install --upgrade setuptools
 pip3 install RPI.GPIO
