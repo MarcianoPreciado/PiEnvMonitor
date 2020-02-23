@@ -42,8 +42,7 @@ while True:
 
         # try again 1 time if recieved is not what was sent
         data = s.recv(1024) # TODO is this timeout reasonable
-        if data is not dataStringBytes:
-            s.connect((HOST, PORT))
+        if data not in dataStringBytes:
             s.sendall(dataStringBytes)
             data = s.recv(1024)
     time.sleep(60)
