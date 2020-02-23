@@ -11,11 +11,11 @@ def logData(time, label, data):
     logString = '%11d'%time
     for item in data:
         logString = logString + ',{}'.format(item)
-    print(logData)
+    logString = logString + '\n'
     
     # Write to file for remote data from this source
     filename = label + '.csv'
-    f = open(filename, a+)
+    f = open(filename, "a+")
     f.write(logString)
     f.close()
     # TODO log to net file that data was saved
@@ -23,24 +23,26 @@ def logData(time, label, data):
 def getCommas(string):
     indicies = []
     remaining = string
-    i = 0
     while ',' in remaining:
-        indicies[i] = remaining.index(',')
-        remaining = remaining[indicies[i]+1:]
-        i = i + 1
+        ind = remaining.index(',')
+        indicies.append(ind)
+        remainingArr = list(remaining)
+        remainingArr[ind] = '.'
+        remaining = "".join(remainingArr)
     return indicies
 
 def parsePacket(data):
-    msg = str(data.outb)
+    msg = data.outb.decode()
+    print(msg)
     inds = getCommas(msg)
-    timestamp = msg[:inds[0]]
+    timestamp = int(msg[1:inds[0]])
     label     = msg[inds[0]+1:inds[1]]
-    tempC     = msg[inds[1]+1:inds[2]]
-    tempF     = msg[inds[2]+1:inds[3]]
-    ambient   = msg[inds[3]+1:inds[4]]
-    lux       = msg[inds[4]+1:]
+    tempC     = float(msg[inds[1]+1:inds[2]])
+    tempF     = float(msg[inds[2]+1:inds[3]])
+    ambient   = float(msg[inds[3]+1:inds[4]])
+    lux       = float(msg[inds[4]+1:])
     
-    data = (tempC,tempf,ambient,lux)
+    data = (tempC,tempF,ambient,lux)
     logData(timestamp, label, data)
 
 def accept_wrapper(sock):
