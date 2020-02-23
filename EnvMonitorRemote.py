@@ -39,6 +39,11 @@ while True:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
         s.sendall(dataStringBytes)
+
+        # try again 1 time if recieved is not what was sent
         data = s.recv(1024) # TODO is this timeout reasonable
-    # TODO something about this while loop
-    time.sleep(5)
+        if data is not dataStringBytes:
+            s.connect((HOST, PORT))
+            s.sendall(dataStringBytes)
+            data = s.recv(1024)
+    time.sleep(60)
