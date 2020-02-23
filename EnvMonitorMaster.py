@@ -35,7 +35,7 @@ def parsePacket(data):
     msg = data.outb.decode()
     if len(msg) > 1:
         inds = getCommas(msg)
-        timestamp = int(msg[1:inds[0]])
+        timestamp = int(msg[:inds[0]])
         label     = msg[inds[0]+1:inds[1]]
         tempC     = float(msg[inds[1]+1:inds[2]])
         tempF     = float(msg[inds[2]+1:inds[3]])
@@ -53,7 +53,7 @@ def accept_wrapper(sock):
     # TODO log to master net log
     # print('accepted connection from',addr)
     conn.setblocking(False)
-    data = types.SimpleNamespace(addr=addr, inb=b'b', outb=b'b')
+    data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'')
     events = selectors.EVENT_READ | selectors.EVENT_WRITE
     sel.register(conn, events, data=data)
 
